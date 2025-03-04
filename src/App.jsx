@@ -1,12 +1,24 @@
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Button from "./components/common/Button";
 import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import ShopPage from "./pages/ShopPage";
+import Header from "./layouts/Header";
+import NotFoundPage from "./pages/NotFoundPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 
 function App() {
-	console.log("app");
 	return (
 		<>
-			<HomePage />
+			<Header />
+			<Routes>
+				<Route index element={<HomePage />} />
+				<Route path="/about" element={<AboutPage />} />
+				<Route path="/shop" element={<ShopPage />} />
+				<Route path="/product-detail/:id" element={<ProductDetailPage />} />
+				{/* //parameters */}
+				<Route path="*" element={<NotFoundPage />} />
+			</Routes>
 		</>
 	);
 }

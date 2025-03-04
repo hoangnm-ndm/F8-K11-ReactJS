@@ -1,28 +1,38 @@
-import React from "react";
-import ProductItem from "../components/ui/ProductItem";
-import data from "../data";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function ShopPage() {
-	console.log(data);
+	const [products, setProducts] = useState([]);
+	async function fetchProducts() {
+		const res = await fetch("http://localhost:3000/products");
+		const data = await res.json();
+		setProducts(data);
+	}
 
-	// Các hooks cần được sử dụng trong function component
+	useEffect(() => {
+		fetchProducts();
+	}, []);
+
+	/**
+	 * dependencies:
+	 * 1. undefined: không khác gì không dùng useEffect -> Sai
+	 * 2. []: chỉ gọi callback 1 lần sau khi component được mount
+	 * 3. [dependence]: gọi lại callback mỗi khi có ít nhất 1 dependence thay đổi
+	 */
 	return (
 		<div>
-			{
-				// Hiển thị danh sách sản phẩm
-				<ProductItem />
-			}
+			<h1>Hot sale 50%</h1>
+			{products.length != 0
+				? products.map((item) => (
+						<div key={item.id}>
+							<h2>{item.title}</h2>
+							<p>Price: {item.price}</p>
+							<Link to={`/product-detail/${item.id}`}>Xem chi tiet</Link>
+						</div>
+				  ))
+				: "Không có sản phẩm nào!"}
 		</div>
 	);
 }
 
 export default ShopPage;
-
-// Xây dựng ShopPage component hiển thị danh sách sản phẩm từ data trên
-/**
- * Khi ấn vào nút đổi layout có thể chuyển đổi giữa 2 layout:
- * - Layout 1: Hiển thị sản phẩm theo dạng danh sách
- * - Layout 2: Hiển thị sản phẩm theo dạng grid
- *
- * Mỗi sản phẩm có đầy đủ thông tin cơ bản như tên, giá, nút xem chi tiết.
- */
